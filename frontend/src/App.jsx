@@ -6,6 +6,7 @@ import PacientesList from './pages/pacientes/PacientesList'
 import PacienteForm from './pages/pacientes/PacienteForm'
 import PacienteDetalle from './pages/pacientes/PacienteDetalle'
 import Agenda from './pages/agenda/Agenda'
+import TratamientosList from './pages/tratamientos/TratamientosList'
 
 function EnConstruccion() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path="/pacientes/:id" element={<PacienteDetalle />} />
           <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
           <Route path="/agenda" element={<Agenda />} />
+          <Route path="/tratamientos" element={<TratamientosList />} />
           <Route path="*" element={<EnConstruccion />} />
         </Route>
       </Routes>

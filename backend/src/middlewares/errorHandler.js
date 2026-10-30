@@ -5,7 +5,10 @@ export function notFound(req, res) {
 // eslint-disable-next-line no-unused-vars
 export function errorHandler(error, req, res, next) {
   if (error.code === '23505') {
-    return res.status(409).json({ mensaje: 'Ya existe un registro con esos datos (cédula duplicada)' })
+    const mensaje = error.constraint === 'tratamientos_codigo_key'
+      ? 'Ya existe un tratamiento con ese código'
+      : 'Ya existe un registro con esos datos (cédula duplicada)'
+    return res.status(409).json({ mensaje })
   }
   if (error.code === '23P01') {
     const mensaje = error.constraint === 'citas_sin_cruce_odontologo'

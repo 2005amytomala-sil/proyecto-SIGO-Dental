@@ -48,3 +48,23 @@ JOIN pacientes p ON p.cedula = c.cedula
 JOIN odontologos o ON o.apellidos = c.odontologo
 JOIN sillones s ON s.nombre = c.sillon
 WHERE NOT EXISTS (SELECT 1 FROM citas);
+
+INSERT INTO tratamientos (codigo, nombre, categoria, descripcion, precio, duracion_min) VALUES
+  ('DIA-001', 'Consulta y diagnóstico', 'Diagnóstico', 'Examen clínico, odontograma y plan de tratamiento', 20.00, 30),
+  ('DIA-002', 'Radiografía periapical', 'Diagnóstico', NULL, 10.00, 15),
+  ('DIA-003', 'Radiografía panorámica', 'Diagnóstico', NULL, 35.00, 15),
+  ('PRE-001', 'Profilaxis (limpieza dental)', 'Prevención', 'Limpieza con ultrasonido y pulido', 30.00, 45),
+  ('PRE-002', 'Aplicación de flúor', 'Prevención', NULL, 15.00, 15),
+  ('PRE-003', 'Sellante de fosas y fisuras', 'Prevención', 'Precio por pieza', 20.00, 15),
+  ('OPE-001', 'Restauración con resina (1 superficie)', 'Operatoria', NULL, 35.00, 45),
+  ('OPE-002', 'Restauración con resina (2 o más superficies)', 'Operatoria', NULL, 50.00, 60),
+  ('END-001', 'Endodoncia unirradicular', 'Endodoncia', NULL, 150.00, 90),
+  ('END-002', 'Endodoncia multirradicular', 'Endodoncia', NULL, 250.00, 120),
+  ('PER-001', 'Raspado y alisado radicular (por cuadrante)', 'Periodoncia', NULL, 60.00, 60),
+  ('CIR-001', 'Exodoncia simple', 'Cirugía', NULL, 40.00, 30),
+  ('CIR-002', 'Exodoncia de tercer molar', 'Cirugía', NULL, 120.00, 60),
+  ('ORT-001', 'Control de ortodoncia', 'Ortodoncia', 'Ajuste mensual', 40.00, 30),
+  ('PRO-001', 'Corona de porcelana', 'Prótesis', 'Incluye costo de laboratorio', 300.00, 60),
+  ('IMP-001', 'Implante dental', 'Implantología', 'No incluye corona', 900.00, 120),
+  ('EST-001', 'Blanqueamiento dental', 'Estética', 'Sesión en consultorio', 180.00, 90)
+ON CONFLICT (codigo) DO NOTHING;

@@ -5,6 +5,7 @@ const { Pool } = pg
 // Las columnas DATE y TIMESTAMP (sin zona) se devuelven como texto para evitar desfases de zona horaria
 pg.types.setTypeParser(1082, (value) => value)
 pg.types.setTypeParser(1114, (value) => value)
+pg.types.setTypeParser(1700, (value) => Number(value))
 
 export const dbConfig = {
   host: process.env.DB_HOST ?? 'localhost',

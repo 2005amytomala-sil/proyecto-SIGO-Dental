@@ -3,6 +3,8 @@ import Modal from '../ui/Modal'
 import { AlertasBadge } from '../pacientes/AlertasMedicas'
 import { listarPacientes } from '../../services/pacientesService'
 import { actualizarCita, crearCita } from '../../services/agendaService'
+import { listarTratamientos } from '../../services/tratamientosService'
+import { formatearMoneda } from '../../utils/moneda'
 import { horaDesdeMinutos } from '../../utils/fechas'
 import { HORA_APERTURA, HORA_CIERRE } from './estadosCita'
 
@@ -114,6 +116,20 @@ export default function CitaFormModal({ cita, inicial = {}, odontologos, sillone
   const [errores, setErrores] = useState({})
   const [mensaje, setMensaje] = useState('')
   const [guardando, setGuardando] = useState(false)
+  const [tratamientos, setTratamientos] = useState([])
+
+  useEffect(() => {
+    listarTratamientos().then(setTratamientos).catch(() => {})
+  }, [])
+
+  const duraciones = [...new Set([...DURACIONES, Number(formulario.duracion_min)])].sort((a, b) => a - b)
+
+  const elegirTratamiento = (e) => {
+    const tratamiento = tratamientos.find((t) => t.id === Number(e.target.value))
+    if (tratamiento) {
+      setFormulario((f) => ({ ...f, motivo: tratamiento.nombre, duracion_min: tratamiento.duracion_min }))
+    }
+  }
 
   const cambiar = (e) => setFormulario((f) => ({ ...f, [e.target.name]: e.target.value }))
 
@@ -193,10 +209,22 @@ export default function CitaFormModal({ cita, inicial = {}, odontologos, sillone
               {select('hora_inicio', HORAS.map((h) => <option key={h} value={h}>{h}</option>))}
             </Campo>
             <Campo etiqueta="Duración" error={errores.duracion_min}>
-              {select('duracion_min', DURACIONES.map((d) => <option key={d} value={d}>{d} min</option>))}
+              {select('duracion_min', duraciones.map((d) => <option key={d} value={d}>{d} min</option>))}
             </Campo>
           </div>
         </div>
+
+        <label className="block">
+          <span className="mb-1.5 block text-sm font-medium text-slate-700">Tratamiento del catálogo</span>
+          <select defaultValue="" onChange={elegirTratamiento} className={`${claseInput} border-slate-200`}>
+            <option value="">Opcional: completa el motivo y la duración...</option>
+            {tratamientos.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.codigo} · {t.nombre} ({t.duracion_min} min · {formatearMoneda(t.precio)})
+              </option>
+            ))}
+          </select>
+        </label>
 
         <Campo etiqueta="Motivo / tratamiento" error={errores.motivo}>
           <input

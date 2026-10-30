@@ -85,3 +85,18 @@ CREATE TABLE IF NOT EXISTS citas (
 );
 
 CREATE INDEX IF NOT EXISTS idx_citas_inicio ON citas (inicio);
+
+-- Catálogo de tratamientos (servicios y precios)
+CREATE TABLE IF NOT EXISTS tratamientos (
+  id            SERIAL PRIMARY KEY,
+  codigo        VARCHAR(20)   NOT NULL UNIQUE,
+  nombre        VARCHAR(150)  NOT NULL,
+  categoria     VARCHAR(40)   NOT NULL,
+  descripcion   TEXT,
+  precio        NUMERIC(10,2) NOT NULL CHECK (precio >= 0),
+  duracion_min  INTEGER       NOT NULL DEFAULT 30 CHECK (duracion_min BETWEEN 15 AND 480),
+  grava_iva     BOOLEAN       NOT NULL DEFAULT FALSE,
+  activo        BOOLEAN       NOT NULL DEFAULT TRUE,
+  created_at    TIMESTAMP     NOT NULL DEFAULT NOW(),
+  updated_at    TIMESTAMP     NOT NULL DEFAULT NOW()
+);
