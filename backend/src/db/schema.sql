@@ -249,3 +249,38 @@ CREATE TABLE IF NOT EXISTS consentimientos (
 
 CREATE INDEX IF NOT EXISTS consentimientos_paciente
   ON consentimientos (paciente_id, created_at DESC);
+
+-- Fase 3 / RF-14: Inventario y recetas estándar de consumo por tratamiento.
+CREATE TABLE IF NOT EXISTS insumos (
+  id                SERIAL PRIMARY KEY,
+  codigo            VARCHAR(30)   NOT NULL UNIQUE,
+  nombre            VARCHAR(150)  NOT NULL,
+  unidad            VARCHAR(30)   NOT NULL,
+  stock_actual      NUMERIC(12,3) NOT NULL DEFAULT 0 CHECK (stock_actual >= 0),
+  stock_minimo      NUMERIC(12,3) NOT NULL DEFAULT 0 CHECK (stock_minimo >= 0),
+  activo            BOOLEAN       NOT NULL DEFAULT TRUE,
+  created_at        TIMESTAMP     NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMP     NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS consumos_configurados (
+  id                SERIAL PRIMARY KEY,
+  tratamiento_id    INTEGER       NOT NULL REFERENCES tratamientos(id),
+  insumo_id         INTEGER       NOT NULL REFERENCES insumos(id),
+  cantidad           NUMERIC(12,3) NOT NULL CHECK (cantidad > 0),
+  UNIQUE (tratamiento_id, insumo_id)
+);
+
+CREATE TABLE IF NOT EXISTS movimientos_insumos (
+  id                SERIAL PRIMARY KEY,
+  insumo_id         INTEGER       NOT NULL REFERENCES insumos(id),
+  tipo              VARCHAR(20)   NOT NULL CHECK (tipo IN ('Entrada', 'Consumo', 'Ajuste')),
+  cantidad          NUMERIC(12,3) NOT NULL CHECK (cantidad > 0),
+  stock_anterior    NUMERIC(12,3) NOT NULL CHECK (stock_anterior >= 0),
+  stock_posterior   NUMERIC(12,3) NOT NULL CHECK (stock_posterior >= 0),
+  referencia        VARCHAR(255),
+  created_at        TIMESTAMP     NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS movimientos_insumos_fecha
+  ON movimientos_insumos (insumo_id, created_at DESC);

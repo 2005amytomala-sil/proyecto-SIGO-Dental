@@ -15,6 +15,7 @@ import FacturaDetalle from './pages/facturacion/FacturaDetalle'
 import Periodontograma from './pages/periodontograma/Periodontograma'
 import EvolucionSoep from './pages/soep/EvolucionSoep'
 import DocumentosClinicos from './pages/documentos/DocumentosClinicos'
+import Inventario from './pages/inventario/Inventario'
 
 function EnConstruccion() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/odontograma" element={<OdontogramaInicio />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/tratamientos" element={<TratamientosList />} />
+          <Route path="/inventario" element={<Inventario />} />
           <Route path="/facturacion" element={<FacturasList />} />
           <Route path="/facturacion/nueva" element={<FacturaForm />} />
           <Route path="/facturacion/:id" element={<FacturaDetalle />} />
