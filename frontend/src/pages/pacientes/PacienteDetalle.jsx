@@ -80,6 +80,12 @@ export default function PacienteDetalle() {
               Odontograma
             </Link>
             <Link
+              to={`/pacientes/${paciente.id}/periodontograma`}
+              className="rounded-xl border border-teal-200 bg-white px-5 py-3 text-sm font-semibold text-teal-700 shadow-sm transition hover:bg-teal-50"
+            >
+              Periodontograma
+            </Link>
+            <Link
               to={`/pacientes/${paciente.id}/editar`}
               className="rounded-xl bg-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
             >

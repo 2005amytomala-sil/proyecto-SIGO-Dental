@@ -171,3 +171,19 @@ CREATE TABLE IF NOT EXISTS odontograma_registros (
 );
 
 CREATE INDEX IF NOT EXISTS odontograma_registros_paciente ON odontograma_registros (paciente_id);
+
+-- RF-04: Periodontograma. Cada toma se conserva como registro inmutable.
+CREATE TABLE IF NOT EXISTS periodontograma_registros (
+  id                SERIAL PRIMARY KEY,
+  paciente_id       INTEGER      NOT NULL REFERENCES pacientes(id),
+  diente            SMALLINT     NOT NULL,
+  puntos            JSONB        NOT NULL,
+  furca             VARCHAR(5)   NOT NULL DEFAULT 'N' CHECK (furca IN ('N', 'I', 'II', 'III')),
+  movilidad         VARCHAR(5)   NOT NULL DEFAULT '0' CHECK (movilidad IN ('0', 'I', 'II', 'III')),
+  sangrado_general  BOOLEAN      NOT NULL DEFAULT FALSE,
+  notas             TEXT,
+  created_at        TIMESTAMP    NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS periodontograma_registros_paciente
+  ON periodontograma_registros (paciente_id, created_at DESC);
