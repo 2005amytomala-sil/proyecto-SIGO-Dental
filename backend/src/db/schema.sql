@@ -154,3 +154,20 @@ CREATE TABLE IF NOT EXISTS factura_pagos (
   monto       NUMERIC(12,2) NOT NULL CHECK (monto > 0),
   referencia  VARCHAR(100)
 );
+
+-- RF-03: Odontograma. Los registros no se borran (RN-01): se anulan con motivo
+CREATE TABLE IF NOT EXISTS odontograma_registros (
+  id                SERIAL PRIMARY KEY,
+  paciente_id       INTEGER      NOT NULL REFERENCES pacientes(id),
+  diente            SMALLINT     NOT NULL,
+  superficie        CHAR(1)      CHECK (superficie IN ('M', 'D', 'O', 'V', 'L')),
+  hallazgo          VARCHAR(40)  NOT NULL,
+  estado            VARCHAR(20)  NOT NULL CHECK (estado IN ('Existente', 'Requerido')),
+  notas             TEXT,
+  anulado           BOOLEAN      NOT NULL DEFAULT FALSE,
+  motivo_anulacion  TEXT,
+  anulado_en        TIMESTAMP,
+  created_at        TIMESTAMP    NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS odontograma_registros_paciente ON odontograma_registros (paciente_id);

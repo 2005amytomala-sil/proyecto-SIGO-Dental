@@ -7,6 +7,8 @@ import PacienteForm from './pages/pacientes/PacienteForm'
 import PacienteDetalle from './pages/pacientes/PacienteDetalle'
 import Agenda from './pages/agenda/Agenda'
 import TratamientosList from './pages/tratamientos/TratamientosList'
+import Odontograma from './pages/odontograma/Odontograma'
+import OdontogramaInicio from './pages/odontograma/OdontogramaInicio'
 import FacturasList from './pages/facturacion/FacturasList'
 import FacturaForm from './pages/facturacion/FacturaForm'
 import FacturaDetalle from './pages/facturacion/FacturaDetalle'
@@ -32,6 +34,8 @@ function App() {
           <Route path="/pacientes/nuevo" element={<PacienteForm />} />
           <Route path="/pacientes/:id" element={<PacienteDetalle />} />
           <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
+          <Route path="/pacientes/:id/odontograma" element={<Odontograma />} />
+          <Route path="/odontograma" element={<OdontogramaInicio />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/tratamientos" element={<TratamientosList />} />
           <Route path="/facturacion" element={<FacturasList />} />

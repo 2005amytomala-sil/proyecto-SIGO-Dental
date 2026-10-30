@@ -72,12 +72,20 @@ export default function PacienteDetalle() {
             </div>
           </div>
 
-          <Link
-            to={`/pacientes/${paciente.id}/editar`}
-            className="rounded-xl bg-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
-          >
-            Editar ficha
-          </Link>
+          <div className="flex flex-wrap gap-3">
+            <Link
+              to={`/pacientes/${paciente.id}/odontograma`}
+              className="rounded-xl border border-teal-200 bg-white px-5 py-3 text-sm font-semibold text-teal-700 shadow-sm transition hover:bg-teal-50"
+            >
+              Odontograma
+            </Link>
+            <Link
+              to={`/pacientes/${paciente.id}/editar`}
+              className="rounded-xl bg-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
+            >
+              Editar ficha
+            </Link>
+          </div>
         </div>
 
         <AlertasMedicas alertas={paciente.alertas} />

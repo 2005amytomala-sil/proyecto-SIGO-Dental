@@ -68,3 +68,18 @@ INSERT INTO tratamientos (codigo, nombre, categoria, descripcion, precio, duraci
   ('IMP-001', 'Implante dental', 'Implantología', 'No incluye corona', 900.00, 120),
   ('EST-001', 'Blanqueamiento dental', 'Estética', 'Sesión en consultorio', 180.00, 90)
 ON CONFLICT (codigo) DO NOTHING;
+
+-- Odontograma de ejemplo (solo si la paciente aún no tiene registros)
+INSERT INTO odontograma_registros (paciente_id, diente, superficie, hallazgo, estado, notas)
+SELECT p.id, v.diente, v.superficie, v.hallazgo, v.estado, v.notas
+FROM pacientes p
+CROSS JOIN (VALUES
+  (16, 'O'::char, 'caries', 'Requerido', 'Caries oclusal profunda'),
+  (26, 'O'::char, 'restauracion', 'Existente', NULL),
+  (26, 'M'::char, 'restauracion', 'Existente', NULL),
+  (36, NULL::char, 'endodoncia', 'Requerido', 'Dolor a la percusión'),
+  (48, NULL::char, 'ausente', 'Existente', NULL),
+  (11, NULL::char, 'corona', 'Existente', 'Corona de porcelana')
+) AS v(diente, superficie, hallazgo, estado, notas)
+WHERE p.cedula = '0912345678'
+  AND NOT EXISTS (SELECT 1 FROM odontograma_registros o WHERE o.paciente_id = p.id);
