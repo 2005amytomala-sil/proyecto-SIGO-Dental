@@ -217,3 +217,35 @@ CREATE TABLE IF NOT EXISTS adendas_soep (
 
 CREATE INDEX IF NOT EXISTS adendas_soep_nota
   ON adendas_soep (nota_id, created_at ASC);
+
+-- RF-06: Recetas y consentimientos firmados. Ambos documentos son inmutables.
+CREATE TABLE IF NOT EXISTS recetas (
+  id                SERIAL PRIMARY KEY,
+  paciente_id       INTEGER       NOT NULL REFERENCES pacientes(id),
+  motivo            VARCHAR(255)  NOT NULL,
+  indicaciones      TEXT,
+  medicamentos      JSONB         NOT NULL,
+  profesional       VARCHAR(150)  NOT NULL,
+  firma             VARCHAR(150)  NOT NULL,
+  firmado_en        TIMESTAMP     NOT NULL DEFAULT NOW(),
+  created_at        TIMESTAMP     NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS recetas_paciente
+  ON recetas (paciente_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS consentimientos (
+  id                SERIAL PRIMARY KEY,
+  paciente_id       INTEGER       NOT NULL REFERENCES pacientes(id),
+  procedimiento     VARCHAR(255)  NOT NULL,
+  contenido         TEXT          NOT NULL,
+  firmante          VARCHAR(150)  NOT NULL,
+  relacion          VARCHAR(80)   NOT NULL,
+  firma_paciente    TEXT          NOT NULL,
+  profesional       VARCHAR(150)  NOT NULL,
+  firmado_en        TIMESTAMP     NOT NULL DEFAULT NOW(),
+  created_at        TIMESTAMP     NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS consentimientos_paciente
+  ON consentimientos (paciente_id, created_at DESC);

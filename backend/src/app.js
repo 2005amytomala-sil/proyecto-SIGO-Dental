@@ -6,6 +6,7 @@ import facturasRoutes from './routes/facturas.routes.js'
 import odontogramaRoutes from './routes/odontograma.routes.js'
 import periodontogramaRoutes from './routes/periodontograma.routes.js'
 import soepRoutes from './routes/soep.routes.js'
+import documentosRoutes from './routes/documentos.routes.js'
 import citasRoutes from './routes/citas.routes.js'
 import catalogosRoutes from './routes/catalogos.routes.js'
 import { errorHandler, notFound } from './middlewares/errorHandler.js'
@@ -23,6 +24,7 @@ app.use('/api/facturas', facturasRoutes)
 app.use('/api/odontograma', odontogramaRoutes)
 app.use('/api/periodontograma', periodontogramaRoutes)
 app.use('/api/soep', soepRoutes)
+app.use('/api/documentos-clinicos', documentosRoutes)
 app.use('/api', catalogosRoutes)
 
 app.use(notFound)

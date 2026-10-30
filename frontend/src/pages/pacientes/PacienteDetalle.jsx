@@ -92,6 +92,12 @@ export default function PacienteDetalle() {
               Evolución SOEP
             </Link>
             <Link
+              to={`/pacientes/${paciente.id}/documentos-clinicos`}
+              className="rounded-xl border border-teal-200 bg-white px-5 py-3 text-sm font-semibold text-teal-700 shadow-sm transition hover:bg-teal-50"
+            >
+              Recetas y consentimientos
+            </Link>
+            <Link
               to={`/pacientes/${paciente.id}/editar`}
               className="rounded-xl bg-teal-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
             >
