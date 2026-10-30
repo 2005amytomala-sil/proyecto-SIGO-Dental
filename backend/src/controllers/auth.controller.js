@@ -35,7 +35,8 @@ export async function login(req, res) {
         mensaje: 'Credenciales incorrectas',
       })
     }
-
+    console.log('JWT configurado:', Boolean(process.env.AUTH_JWT_SECRET))
+    console.log('Longitud JWT:', process.env.AUTH_JWT_SECRET?.length ?? 0)
     if (!process.env.AUTH_JWT_SECRET) {
       throw new Error('Falta configurar AUTH_JWT_SECRET')
     }
