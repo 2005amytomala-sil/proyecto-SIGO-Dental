@@ -11,6 +11,8 @@ export function listarCitas({ desde, hasta, sillonId, odontologoId }) {
   return apiFetch(`/citas?${params}`)
 }
 
+export const obtenerCita = (id) => apiFetch(`/citas/${id}`)
+
 export const crearCita = (cita) => apiFetch('/citas', { method: 'POST', body: cita })
 
 export const actualizarCita = (id, cita) => apiFetch(`/citas/${id}`, { method: 'PUT', body: cita })

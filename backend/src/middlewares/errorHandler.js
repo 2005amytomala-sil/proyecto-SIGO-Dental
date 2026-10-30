@@ -5,9 +5,11 @@ export function notFound(req, res) {
 // eslint-disable-next-line no-unused-vars
 export function errorHandler(error, req, res, next) {
   if (error.code === '23505') {
-    const mensaje = error.constraint === 'tratamientos_codigo_key'
-      ? 'Ya existe un tratamiento con ese código'
-      : 'Ya existe un registro con esos datos (cédula duplicada)'
+    const mensajes = {
+      tratamientos_codigo_key: 'Ya existe un tratamiento con ese código',
+      facturas_cita_emitida: 'Esta cita ya tiene una factura emitida',
+    }
+    const mensaje = mensajes[error.constraint] ?? 'Ya existe un registro con esos datos (cédula duplicada)'
     return res.status(409).json({ mensaje })
   }
   if (error.code === '23P01') {
@@ -17,7 +19,7 @@ export function errorHandler(error, req, res, next) {
     return res.status(409).json({ mensaje })
   }
   if (error.code === '23503') {
-    return res.status(400).json({ mensaje: 'El paciente, odontólogo o sillón indicado no existe' })
+    return res.status(400).json({ mensaje: 'Alguno de los registros relacionados no existe (paciente, odontólogo, sillón, cita o tratamiento)' })
   }
   console.error(error)
   res.status(error.status ?? 500).json({ mensaje: error.status ? error.message : 'Error interno del servidor' })

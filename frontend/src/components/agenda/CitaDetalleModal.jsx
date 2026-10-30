@@ -91,6 +91,17 @@ export default function CitaDetalleModal({ cita, onClose, onActualizada, onEdita
           </label>
         )}
 
+        {cita.estado === 'Atendido' && (
+          <div className="flex justify-end border-t border-slate-200 pt-4">
+            <Link
+              to={`/facturacion/nueva?cita=${cita.id}`}
+              className="rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+            >
+              Facturar cita
+            </Link>
+          </div>
+        )}
+
         {(transiciones.length > 0 || ESTADOS_EDITABLES.includes(cita.estado)) && (
           <div className="flex flex-wrap justify-end gap-2 border-t border-slate-200 pt-4">
             {ESTADOS_EDITABLES.includes(cita.estado) && !cancelando && (

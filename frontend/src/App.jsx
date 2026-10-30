@@ -7,6 +7,9 @@ import PacienteForm from './pages/pacientes/PacienteForm'
 import PacienteDetalle from './pages/pacientes/PacienteDetalle'
 import Agenda from './pages/agenda/Agenda'
 import TratamientosList from './pages/tratamientos/TratamientosList'
+import FacturasList from './pages/facturacion/FacturasList'
+import FacturaForm from './pages/facturacion/FacturaForm'
+import FacturaDetalle from './pages/facturacion/FacturaDetalle'
 
 function EnConstruccion() {
   return (
@@ -31,6 +34,9 @@ function App() {
           <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
           <Route path="/agenda" element={<Agenda />} />
           <Route path="/tratamientos" element={<TratamientosList />} />
+          <Route path="/facturacion" element={<FacturasList />} />
+          <Route path="/facturacion/nueva" element={<FacturaForm />} />
+          <Route path="/facturacion/:id" element={<FacturaDetalle />} />
           <Route path="*" element={<EnConstruccion />} />
         </Route>
       </Routes>

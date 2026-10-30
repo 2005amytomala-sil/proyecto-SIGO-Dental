@@ -100,3 +100,57 @@ CREATE TABLE IF NOT EXISTS tratamientos (
   created_at    TIMESTAMP     NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMP     NOT NULL DEFAULT NOW()
 );
+
+-- RF-12: Facturación básica (comprobante interno con pagos mixtos)
+-- Contador transaccional: si la factura falla se revierte y la numeración queda sin saltos
+CREATE TABLE IF NOT EXISTS secuenciales (
+  nombre  VARCHAR(30) PRIMARY KEY,
+  valor   INTEGER     NOT NULL DEFAULT 0
+);
+INSERT INTO secuenciales (nombre, valor) VALUES ('factura', 0) ON CONFLICT (nombre) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS facturas (
+  id                      SERIAL PRIMARY KEY,
+  numero                  VARCHAR(20)   NOT NULL UNIQUE,
+  paciente_id             INTEGER       NOT NULL REFERENCES pacientes(id),
+  cita_id                 INTEGER       REFERENCES citas(id),
+  fecha                   TIMESTAMP     NOT NULL DEFAULT NOW(),
+  cliente_nombre          VARCHAR(200)  NOT NULL,
+  cliente_identificacion  VARCHAR(20)   NOT NULL,
+  cliente_direccion       TEXT,
+  cliente_email           VARCHAR(150),
+  iva_porcentaje          NUMERIC(5,2)  NOT NULL,
+  subtotal_0              NUMERIC(12,2) NOT NULL,
+  subtotal_iva            NUMERIC(12,2) NOT NULL,
+  descuento               NUMERIC(12,2) NOT NULL,
+  iva                     NUMERIC(12,2) NOT NULL,
+  total                   NUMERIC(12,2) NOT NULL,
+  estado                  VARCHAR(20)   NOT NULL DEFAULT 'Emitida' CHECK (estado IN ('Emitida', 'Anulada')),
+  motivo_anulacion        TEXT,
+  anulada_en              TIMESTAMP,
+  created_at              TIMESTAMP     NOT NULL DEFAULT NOW()
+);
+
+-- Una cita solo puede tener una factura vigente
+CREATE UNIQUE INDEX IF NOT EXISTS facturas_cita_emitida ON facturas (cita_id)
+  WHERE estado = 'Emitida' AND cita_id IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS factura_detalles (
+  id               SERIAL PRIMARY KEY,
+  factura_id       INTEGER       NOT NULL REFERENCES facturas(id),
+  tratamiento_id   INTEGER       REFERENCES tratamientos(id),
+  descripcion      VARCHAR(200)  NOT NULL,
+  cantidad         INTEGER       NOT NULL CHECK (cantidad > 0),
+  precio_unitario  NUMERIC(10,2) NOT NULL CHECK (precio_unitario >= 0),
+  descuento        NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (descuento >= 0),
+  grava_iva        BOOLEAN       NOT NULL DEFAULT FALSE,
+  subtotal         NUMERIC(12,2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS factura_pagos (
+  id          SERIAL PRIMARY KEY,
+  factura_id  INTEGER       NOT NULL REFERENCES facturas(id),
+  metodo      VARCHAR(30)   NOT NULL,
+  monto       NUMERIC(12,2) NOT NULL CHECK (monto > 0),
+  referencia  VARCHAR(100)
+);
