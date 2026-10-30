@@ -284,3 +284,33 @@ CREATE TABLE IF NOT EXISTS movimientos_insumos (
 
 CREATE INDEX IF NOT EXISTS movimientos_insumos_fecha
   ON movimientos_insumos (insumo_id, created_at DESC);
+
+-- Fase 3 / RF-13: Reglas y liquidaciones de honorarios profesionales.
+CREATE TABLE IF NOT EXISTS comisiones_configuradas (
+  id                SERIAL PRIMARY KEY,
+  odontologo_id     INTEGER       NOT NULL REFERENCES odontologos(id),
+  tratamiento_id    INTEGER       REFERENCES tratamientos(id),
+  tipo              VARCHAR(20)   NOT NULL CHECK (tipo IN ('Porcentaje', 'Monto fijo')),
+  valor             NUMERIC(12,2) NOT NULL CHECK (valor >= 0),
+  deducir_costos    BOOLEAN       NOT NULL DEFAULT FALSE,
+  costo_deducible  NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (costo_deducible >= 0),
+  activo            BOOLEAN       NOT NULL DEFAULT TRUE,
+  created_at        TIMESTAMP     NOT NULL DEFAULT NOW(),
+  UNIQUE (odontologo_id, tratamiento_id)
+);
+
+CREATE TABLE IF NOT EXISTS liquidaciones_honorarios (
+  id                SERIAL PRIMARY KEY,
+  factura_id        INTEGER       NOT NULL REFERENCES facturas(id),
+  factura_detalle_id INTEGER      NOT NULL UNIQUE REFERENCES factura_detalles(id),
+  odontologo_id     INTEGER       NOT NULL REFERENCES odontologos(id),
+  tipo              VARCHAR(20)   NOT NULL,
+  valor             NUMERIC(12,2) NOT NULL,
+  base_calculo      NUMERIC(12,2) NOT NULL,
+  costo_deducible   NUMERIC(12,2) NOT NULL DEFAULT 0,
+  monto             NUMERIC(12,2) NOT NULL,
+  created_at        TIMESTAMP     NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS liquidaciones_honorarios_fecha
+  ON liquidaciones_honorarios (created_at DESC);

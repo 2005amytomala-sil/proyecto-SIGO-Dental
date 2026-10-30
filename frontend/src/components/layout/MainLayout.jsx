@@ -1,8 +1,16 @@
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Navbar from './Navbar'
 
 export default function MainLayout() {
+  const navigate = useNavigate()
+
+  function cerrarSesion() {
+    localStorage.removeItem('sigo_token')
+    localStorage.removeItem('sigo_usuario')
+    navigate('/login', { replace: true })
+  }
+
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar />
@@ -14,10 +22,17 @@ export default function MainLayout() {
           <Outlet />
         </main>
 
-        <footer className="border-t border-slate-200 bg-white px-8 py-4">
-          <p className="text-center text-xs text-slate-500">
+        <footer className="flex items-center justify-between border-t border-slate-200 bg-white px-8 py-4">
+          <p className="text-xs text-slate-500">
             SIGO-Dental · Sistema Integral de Gestión Odontológica
           </p>
+
+          <button
+            onClick={cerrarSesion}
+            className="text-sm font-medium text-red-600 hover:text-red-800"
+          >
+            Cerrar sesión
+          </button>
         </footer>
       </div>
     </div>

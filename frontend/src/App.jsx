@@ -1,6 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import MainLayout from './components/layout/MainLayout'
+import ProtectedRoute from './components/auth/ProtectedRoute'
+import Login from './pages/Login'
+
 import Dashboard from './pages/Dashboard'
 import PacientesList from './pages/pacientes/PacientesList'
 import PacienteForm from './pages/pacientes/PacienteForm'
@@ -16,6 +19,7 @@ import Periodontograma from './pages/periodontograma/Periodontograma'
 import EvolucionSoep from './pages/soep/EvolucionSoep'
 import DocumentosClinicos from './pages/documentos/DocumentosClinicos'
 import Inventario from './pages/inventario/Inventario'
+import Comisiones from './pages/comisiones/Comisiones'
 
 function EnConstruccion() {
   return (
@@ -32,24 +36,31 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/pacientes" element={<PacientesList />} />
-          <Route path="/pacientes/nuevo" element={<PacienteForm />} />
-          <Route path="/pacientes/:id" element={<PacienteDetalle />} />
-          <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
-          <Route path="/pacientes/:id/odontograma" element={<Odontograma />} />
-          <Route path="/pacientes/:id/periodontograma" element={<Periodontograma />} />
-          <Route path="/pacientes/:id/evolucion" element={<EvolucionSoep />} />
-          <Route path="/pacientes/:id/documentos-clinicos" element={<DocumentosClinicos />} />
-          <Route path="/odontograma" element={<OdontogramaInicio />} />
-          <Route path="/agenda" element={<Agenda />} />
-          <Route path="/tratamientos" element={<TratamientosList />} />
-          <Route path="/inventario" element={<Inventario />} />
-          <Route path="/facturacion" element={<FacturasList />} />
-          <Route path="/facturacion/nueva" element={<FacturaForm />} />
-          <Route path="/facturacion/:id" element={<FacturaDetalle />} />
-          <Route path="*" element={<EnConstruccion />} />
+        {/* Login público */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Rutas protegidas */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/pacientes" element={<PacientesList />} />
+            <Route path="/pacientes/nuevo" element={<PacienteForm />} />
+            <Route path="/pacientes/:id" element={<PacienteDetalle />} />
+            <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
+            <Route path="/pacientes/:id/odontograma" element={<Odontograma />} />
+            <Route path="/pacientes/:id/periodontograma" element={<Periodontograma />} />
+            <Route path="/pacientes/:id/evolucion" element={<EvolucionSoep />} />
+            <Route path="/pacientes/:id/documentos-clinicos" element={<DocumentosClinicos />} />
+            <Route path="/odontograma" element={<OdontogramaInicio />} />
+            <Route path="/agenda" element={<Agenda />} />
+            <Route path="/tratamientos" element={<TratamientosList />} />
+            <Route path="/inventario" element={<Inventario />} />
+            <Route path="/comisiones" element={<Comisiones />} />
+            <Route path="/facturacion" element={<FacturasList />} />
+            <Route path="/facturacion/nueva" element={<FacturaForm />} />
+            <Route path="/facturacion/:id" element={<FacturaDetalle />} />
+            <Route path="*" element={<EnConstruccion />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

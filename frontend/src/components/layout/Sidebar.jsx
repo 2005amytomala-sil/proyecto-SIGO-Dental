@@ -9,6 +9,7 @@ const menuItems = [
   { name: 'Tratamientos', path: '/tratamientos', icon: '✚' },
   { name: 'Facturación', path: '/facturacion', icon: '$' },
   { name: 'Inventario', path: '/inventario', icon: '▧' },
+  { name: 'Honorarios', path: '/comisiones', icon: '%' },
 ]
 
 export default function Sidebar() {
