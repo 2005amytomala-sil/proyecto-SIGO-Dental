@@ -187,3 +187,33 @@ CREATE TABLE IF NOT EXISTS periodontograma_registros (
 
 CREATE INDEX IF NOT EXISTS periodontograma_registros_paciente
   ON periodontograma_registros (paciente_id, created_at DESC);
+
+-- RF-05: Bitácora SOEP inmutable. Las correcciones se registran como adendas.
+CREATE TABLE IF NOT EXISTS notas_soep (
+  id                SERIAL PRIMARY KEY,
+  paciente_id       INTEGER      NOT NULL REFERENCES pacientes(id),
+  subjetivo         TEXT         NOT NULL,
+  objetivo          TEXT         NOT NULL,
+  evaluacion        TEXT         NOT NULL,
+  plan              TEXT         NOT NULL,
+  profesional       VARCHAR(150) NOT NULL,
+  firma             VARCHAR(150) NOT NULL,
+  firmado_en        TIMESTAMP    NOT NULL DEFAULT NOW(),
+  created_at        TIMESTAMP    NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS notas_soep_paciente
+  ON notas_soep (paciente_id, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS adendas_soep (
+  id                SERIAL PRIMARY KEY,
+  nota_id           INTEGER      NOT NULL REFERENCES notas_soep(id),
+  contenido         TEXT         NOT NULL,
+  profesional       VARCHAR(150) NOT NULL,
+  firma             VARCHAR(150) NOT NULL,
+  firmado_en        TIMESTAMP    NOT NULL DEFAULT NOW(),
+  created_at        TIMESTAMP    NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS adendas_soep_nota
+  ON adendas_soep (nota_id, created_at ASC);
