@@ -21,3 +21,30 @@ JOIN (VALUES
 ) AS datos(cedula, enfermedades, alergias, cirugias, medicamentos, coagulopatia, anticoagulado)
   ON datos.cedula = pacientes.cedula
 ON CONFLICT (paciente_id) DO NOTHING;
+
+INSERT INTO odontologos (nombres, apellidos, especialidad, color)
+SELECT * FROM (VALUES
+  ('Andrea', 'López', 'Ortodoncia', 'teal'),
+  ('Miguel', 'Torres', 'Odontología general', 'blue'),
+  ('Valeria', 'Castro', 'Endodoncia', 'violet')
+) AS v(nombres, apellidos, especialidad, color)
+WHERE NOT EXISTS (SELECT 1 FROM odontologos);
+
+INSERT INTO sillones (nombre, consultorio) VALUES
+  ('Sillón 1', 'Consultorio A'),
+  ('Sillón 2', 'Consultorio A'),
+  ('Sillón 3', 'Consultorio B')
+ON CONFLICT (nombre) DO NOTHING;
+
+-- Citas de ejemplo para el día en que se ejecuta el seed
+INSERT INTO citas (paciente_id, odontologo_id, sillon_id, inicio, fin, motivo, estado)
+SELECT p.id, o.id, s.id, CURRENT_DATE + c.hora, CURRENT_DATE + c.hora + c.duracion, c.motivo, c.estado
+FROM (VALUES
+  ('0912345678', 'López',  'Sillón 1', TIME '09:00', INTERVAL '30 minutes', 'Limpieza dental',  'Confirmado'),
+  ('0923456789', 'Torres', 'Sillón 2', TIME '10:00', INTERVAL '45 minutes', 'Consulta general', 'En sala de espera'),
+  ('0934567890', 'López',  'Sillón 1', TIME '11:30', INTERVAL '60 minutes', 'Control de ortodoncia', 'Programado')
+) AS c(cedula, odontologo, sillon, hora, duracion, motivo, estado)
+JOIN pacientes p ON p.cedula = c.cedula
+JOIN odontologos o ON o.apellidos = c.odontologo
+JOIN sillones s ON s.nombre = c.sillon
+WHERE NOT EXISTS (SELECT 1 FROM citas);

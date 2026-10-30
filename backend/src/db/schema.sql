@@ -37,3 +37,51 @@ CREATE TABLE IF NOT EXISTS anamnesis (
 );
 
 CREATE INDEX IF NOT EXISTS idx_pacientes_apellidos ON pacientes (apellidos, nombres);
+
+-- Catálogos de agenda
+CREATE TABLE IF NOT EXISTS odontologos (
+  id            SERIAL PRIMARY KEY,
+  nombres       VARCHAR(100) NOT NULL,
+  apellidos     VARCHAR(100) NOT NULL,
+  especialidad  VARCHAR(100) NOT NULL DEFAULT 'Odontología general',
+  color         VARCHAR(20)  NOT NULL DEFAULT 'teal',
+  activo        BOOLEAN      NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE IF NOT EXISTS sillones (
+  id          SERIAL PRIMARY KEY,
+  nombre      VARCHAR(50)  NOT NULL UNIQUE,
+  consultorio VARCHAR(100) NOT NULL,
+  activo      BOOLEAN      NOT NULL DEFAULT TRUE
+);
+
+-- RF-09 / RF-10 / RN-03: Citas por sillón y odontólogo
+CREATE EXTENSION IF NOT EXISTS btree_gist;
+
+CREATE TABLE IF NOT EXISTS citas (
+  id                  SERIAL PRIMARY KEY,
+  paciente_id         INTEGER      NOT NULL REFERENCES pacientes(id),
+  odontologo_id       INTEGER      NOT NULL REFERENCES odontologos(id),
+  sillon_id           INTEGER      NOT NULL REFERENCES sillones(id),
+  inicio              TIMESTAMP    NOT NULL,
+  fin                 TIMESTAMP    NOT NULL,
+  motivo              VARCHAR(255) NOT NULL,
+  observaciones       TEXT,
+  estado              VARCHAR(30)  NOT NULL DEFAULT 'Programado' CHECK (estado IN (
+                        'Programado', 'Confirmado', 'En sala de espera', 'En atención',
+                        'Atendido', 'Cancelado', 'No asistió')),
+  motivo_cancelacion  TEXT,
+  created_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  updated_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+  CONSTRAINT citas_rango_valido CHECK (fin > inicio),
+  -- RN-03: un sillón físico no puede tener dos citas que se crucen
+  CONSTRAINT citas_sin_cruce_sillon EXCLUDE USING gist (
+    sillon_id WITH =, tsrange(inicio, fin) WITH &&
+  ) WHERE (estado NOT IN ('Cancelado', 'No asistió')),
+  -- Un odontólogo no puede atender dos citas a la vez
+  CONSTRAINT citas_sin_cruce_odontologo EXCLUDE USING gist (
+    odontologo_id WITH =, tsrange(inicio, fin) WITH &&
+  ) WHERE (estado NOT IN ('Cancelado', 'No asistió'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_citas_inicio ON citas (inicio);

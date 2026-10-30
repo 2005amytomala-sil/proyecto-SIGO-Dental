@@ -1,14 +1,14 @@
 import { NavLink } from 'react-router-dom'
 
 const menuItems = [
-  { name: 'Dashboard', path: '/', icon: 'â–¦' },
-  { name: 'Pacientes', path: '/pacientes', icon: 'â™™' },
-  { name: 'Agenda de citas', path: '/agenda', icon: 'â–£' },
-  { name: 'Expedientes clÃ­nicos', path: '/expedientes', icon: 'â–¤' },
-  { name: 'Odontograma', path: '/odontograma', icon: 'â—‰' },
-  { name: 'Tratamientos', path: '/tratamientos', icon: 'âœš' },
-  { name: 'FacturaciÃ³n', path: '/facturacion', icon: '$' },
-  { name: 'Inventario', path: '/inventario', icon: 'â–§' },
+  { name: 'Dashboard', path: '/', icon: '▦' },
+  { name: 'Pacientes', path: '/pacientes', icon: '♙' },
+  { name: 'Agenda de citas', path: '/agenda', icon: '▣' },
+  { name: 'Expedientes clínicos', path: '/expedientes', icon: '▤' },
+  { name: 'Odontograma', path: '/odontograma', icon: '◉' },
+  { name: 'Tratamientos', path: '/tratamientos', icon: '✚' },
+  { name: 'Facturación', path: '/facturacion', icon: '$' },
+  { name: 'Inventario', path: '/inventario', icon: '▧' },
 ]
 
 export default function Sidebar() {
@@ -26,15 +26,15 @@ export default function Sidebar() {
           </h1>
 
           <p className="text-xs text-slate-400">
-            GestiÃ³n odontolÃ³gica
+            Gestión odontológica
           </p>
         </div>
       </div>
 
-      {/* NavegaciÃ³n */}
+      {/* Navegación */}
       <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-6">
         <p className="mb-4 px-3 text-xs font-semibold uppercase tracking-widest text-slate-400">
-          MenÃº principal
+          Menú principal
         </p>
 
         {menuItems.map((item) => (
@@ -59,15 +59,15 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* InformaciÃ³n inferior */}
+      {/* Información inferior */}
       <div className="border-t border-slate-700 p-4">
         <div className="rounded-xl bg-slate-800 p-4">
           <p className="text-sm font-medium">
-            Sistema clÃ­nico
+            Sistema clínico
           </p>
 
           <p className="mt-1 text-xs text-slate-400">
-            Plataforma de administraciÃ³n
+            Plataforma de administración
           </p>
         </div>
       </div>

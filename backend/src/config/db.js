@@ -2,8 +2,9 @@ import pg from 'pg'
 
 const { Pool } = pg
 
-// Las columnas DATE se devuelven como texto 'YYYY-MM-DD' para evitar desfases de zona horaria
+// Las columnas DATE y TIMESTAMP (sin zona) se devuelven como texto para evitar desfases de zona horaria
 pg.types.setTypeParser(1082, (value) => value)
+pg.types.setTypeParser(1114, (value) => value)
 
 export const dbConfig = {
   host: process.env.DB_HOST ?? 'localhost',

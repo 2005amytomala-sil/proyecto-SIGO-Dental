@@ -5,6 +5,7 @@ import Dashboard from './pages/Dashboard'
 import PacientesList from './pages/pacientes/PacientesList'
 import PacienteForm from './pages/pacientes/PacienteForm'
 import PacienteDetalle from './pages/pacientes/PacienteDetalle'
+import Agenda from './pages/agenda/Agenda'
 
 function EnConstruccion() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path="/pacientes/nuevo" element={<PacienteForm />} />
           <Route path="/pacientes/:id" element={<PacienteDetalle />} />
           <Route path="/pacientes/:id/editar" element={<PacienteForm />} />
+          <Route path="/agenda" element={<Agenda />} />
           <Route path="*" element={<EnConstruccion />} />
         </Route>
       </Routes>
