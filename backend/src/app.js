@@ -14,7 +14,12 @@ import { errorHandler, notFound } from './middlewares/errorHandler.js'
 
 const app = express()
 
-app.use(cors())
+const allowedOrigins = process.env.FRONTEND_URL
+  ?.split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean)
+
+app.use(cors(allowedOrigins?.length ? { origin: allowedOrigins } : undefined))
 app.use(express.json())
 
 app.get('/api/health', (req, res) => res.json({ estado: 'ok' }))
